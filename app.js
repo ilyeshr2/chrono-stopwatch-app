@@ -1,84 +1,83 @@
-const h=document.querySelector('#hours')
-const m=document.querySelector('#minuts')
-const s=document.querySelector('#seconds')
-const ms=document.querySelector('#ms')
-const start=document.querySelector('#start')
-const pause=document.querySelector('#pause')
-const reset=document.querySelector('#reset')
+const h = document.querySelector('#hours');
+const m = document.querySelector('#minutes');
+const s = document.querySelector('#seconds');
+const ms = document.querySelector('#milliseconds');
+const start = document.querySelector('#start');
+const pause = document.querySelector('#pause');
+const reset = document.querySelector('#reset');
 
-start.addEventListener('click',startChrono)
+let msInterval;
+let flag =false;
+let MsObject = { count: 0};
+let sObject = { count: 0};
+let mObject = { count: 0};
+let hObject = { count: 0};
 
-function startChrono(){
-    msTimeFunction() 
-}
+start.addEventListener('click', startChrono);
+pause.addEventListener('click', pauseChrono);
+reset.addEventListener('click', resetChrono);
 
-let MsObject={
-    count:0,
-    rotations:0
-}
-let sObject={
-    count:0,
-    rotations:0
-}
-
-let mObject={
-    count:0,
-    rotations:0
-}
-let hObject={
-    count:0,
-    rotations:0
-}
-
-
-
-
-function msTimeFunction(){
-    let msInterval=setInterval(msTimeRotation,10)
-    function msTimeRotation(){
-    MsObject.count++
-    ms.innerText=`.${MsObject.count}`
-    //console.log(MsObject.count)
-    if(MsObject.count==100){
-        MsObject.rotations++
-        MsObject.count=0
-        sTimeFunction()
-        return
-        //console.log(MsObject.rotations)
-    }}
-}
-
-function sTimeFunction(){
-
-    //console.log(sObject.count)
-    if(sObject.count==60){
-        sObject.rotations++
-        sObject.count=0
-        mTimeFunction()
-        return
+function startChrono() {
+    if(flag==false){
+        msInterval = setInterval(msTimeRotation, 10);
+        flag=true
     }
-    sObject.count++
-    s.innerText=`.${sObject.count}`
-}
-function mTimeFunction(){
-
-    //console.log(sObject.count)
-    if(mObject.count==60){
-        mObject.rotations++
-        mObject.count=0
-        hTimeFunction()
-    }
-    mObject.count++
-    m.innerText=`.${mObject.count}`
-}
-function hTimeFunction(){
-    //console.log(sObject.count)
-    if(hObject.count==24){
-        hObject.rotations++
-        hObject.count=0
-        //mTimeFunction()
-    }
-    hObject.count++
-    h.innerText=`.${hObject.count}`
 }
 
+function msTimeRotation() {
+    MsObject.count++;
+    if (MsObject.count === 100) {
+        MsObject.count = 0;
+        sTimeFunction();
+    }
+    ms.innerText = `${String(MsObject.count).padStart(2, '0')}`;
+}
+
+function sTimeFunction() {
+    sObject.count++;
+    
+    if (sObject.count === 60) {
+        sObject.count = 0;
+        mTimeFunction();
+    }
+    s.innerText = `${String(sObject.count).padStart(2, '0')}`;
+}
+
+function mTimeFunction() {
+    mObject.count++;
+    
+    if (mObject.count === 60) {
+        mObject.count = 0;
+        hTimeFunction();
+    }
+    m.innerText = `${String(mObject.count).padStart(2, '0')}`;
+}
+
+function hTimeFunction() {
+    hObject.count++;
+    
+    if (hObject.count === 24) {
+        hObject.count = 0;
+    }
+    h.innerText = `${String(hObject.count).padStart(2, '0')}`;
+}
+
+function pauseChrono() {
+    if(flag==true){
+        clearInterval(msInterval);
+        flag=false
+    }
+}
+
+function resetChrono() {
+    clearInterval(msInterval);
+    MsObject = { count: 0};
+    sObject = { count: 0};
+    mObject = { count: 0};
+    hObject = { count: 0};
+    ms.innerText = '00';
+    s.innerText = '00';
+    m.innerText = '00';
+    h.innerText = '00';
+    flag=false
+}
